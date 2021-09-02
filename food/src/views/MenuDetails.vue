@@ -12,8 +12,10 @@
                         <div class="container-card">
                             <h4><b>{{options.type_option}}</b></h4>
                             <p>{{options.option_name}}</p>
-                            <SecundaryButton @action="edit"  placeholder="Editar cardápio"/>
-                            <button @click="deleteFood">Deletar cardápio</button>
+                            <div v-if="user_type === 'Nutricionista'">
+                                <SecundaryButton @action="edit"  placeholder="Editar cardápio"/>
+                                <button @click="deleteFood">Deletar cardápio</button>
+                            </div>
                         </div>
 
                     </div>
@@ -45,7 +47,8 @@ export default{
     data(){
         return{
             id: this.$route.params.id,
-            options: []   
+            options: [],
+            user_type: localStorage.getItem('user_type')   
         }
     },
     methods: {
@@ -59,8 +62,11 @@ export default{
         },
         async deleteFood() {
             try{
-                const res = await api.delete(`/option/${this.id}`);
-                console.log(res.data);
+                let result = confirm('Deseja mesmo excluir esse cardápio?')
+                if(result === true){
+                    const res = await api.delete(`/option/${this.id}`);
+                    console.log(res.data);
+                }
             }catch(e){
                 alert(e.response.data.message)
             }
@@ -73,8 +79,24 @@ export default{
 }
 </script>
 <style scoped>
- .logo{
+        .logo{
             text-align: center;
+        }
+        button{
+            height: 30px;
+            width: 12%;
+            border-radius: 8px;
+            background-color: rgb(238, 10, 10);
+            border: none;
+            color: #ffff;
+            font-weight: 700;
+            margin-top: 1%;
+            transition: background-color 0.2s;
+        }
+
+        button:hover{
+            cursor: pointer;
+            background-color: #ff0000;
         }
         .nav-bar{
            text-align: center;

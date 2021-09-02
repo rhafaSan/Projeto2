@@ -25,6 +25,7 @@ export default {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        padding: 0.5% 0.5% 0 0 ;
     }
     .logo{
         width: 15%;
