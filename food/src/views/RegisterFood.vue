@@ -10,17 +10,17 @@
                             <option value="PROTEINA">PROTEINA</option>
                             <option value="FRUTA">FRUTA</option>
                             <option value="CARBOIDRATO">CARBOIDRATO</option>
-
-
                           </select>
                           
                         <br>
                           <label for="opcao">Informe a opção:</label>
-                          <select name="" id="" v-model="option_name" @click="getOption">
+                          <select v-model="option_name" @click="getOption">
                               <option v-for="opt of options" v-bind:value="opt.option_name" :key="opt.id">{{opt.option_name}}</option>
                           </select>
 
                           <br>
+                          <label for="">Imagem: </label>
+                          <input type="file" @change="getImage" >
                           
                           <label for="cardápio">Data do cardápio:</label>
                           <input type="date" v-model="date_menu">
@@ -57,6 +57,12 @@ export default {
             e.preventDefault();
             this.register()
         },
+        getImage(e){
+            console.log(e.target.files);
+            this.image_food = e.target.files[0];
+            // this.image_food = this.$refs.files.files;
+        },
+
         getOption(){
             for(let opt of this.options){
                 if(opt.option_name === this.option_name){
@@ -74,6 +80,8 @@ export default {
             this.options = res.data.Option;
         },
         async register(){
+            const fd = new FormData();
+            fd.append('image', this.image_food, this.image_food.name)
             const data = {
                 type_option: this.type_option,
                 option_name: this.option_name,
@@ -82,7 +90,12 @@ export default {
                 image_food: this.image_food
 
             }
-            const res = await api.post('/menu/', data);
+            const res = await api.post('/menu/', data,{
+                headers:{
+                    'Accept': 'application/json',
+                    // 'Content-Type': 'multipart/form-data'
+                }
+            });
             if(res.data.message === 'Cadastro efetuado com sucesso!'){
                 console.log(res.data);
                 this.$router.push('/dashboard')

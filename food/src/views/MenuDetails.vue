@@ -48,14 +48,22 @@ export default{
         return{
             id: this.$route.params.id,
             options: [],
+            menu_id: null,
             user_type: localStorage.getItem('user_type')   
         }
     },
     methods: {
         async getOption(){
-            const res = await api.get(`/option/${this.id}`);
-            console.log(res.data.Option[0].option_name);
-            this.options = res.data.Option[0];
+            const res = await api.get(`/menu/${this.id}`);
+            this.menu_id = res.data.Menu[0].option_id;
+            console.log(this.menu_id);            
+
+            try{
+                const res = await api.get(`/option/${this.menu_id}`)
+                this.options = res.data.Option[0];
+            }catch(e){
+                console.log(e.response.data.message)
+            }
         },
         edit(){
             this.$router.push(`update-menu/${this.id}`)
@@ -64,7 +72,7 @@ export default{
             try{
                 let result = confirm('Deseja mesmo excluir esse cardápio?')
                 if(result === true){
-                    const res = await api.delete(`/option/${this.id}`);
+                    const res = await api.delete(`/menu/${this.id}`);
                     console.log(res.data);
                 }
             }catch(e){

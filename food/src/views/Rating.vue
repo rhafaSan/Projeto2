@@ -6,35 +6,41 @@
             <form action="" name="rating_form" @submit="goToDashboard">
                 <div class="form-div">
                     <label for="evaluation_type">Tipo de avaliação:</label>
-                    <select name="evaluation_type" id="evaluation_type" required>
-                        <option value="praise">ELOGIO</option>
-                        <option value="complaint">RECLAMAÇÂO</option>
+                    <select name="evaluation_type" id="evaluation_type" v-model="evaluation.evaluation_type" required>
+                        <option value="ELOGIO">ELOGIO</option>
+                        <option value="RECLAMAÇÃO">RECLAMAÇÂO</option>
                     </select>
 
                     <label for="evaluation_grade">Nota da avaliação:</label>
-                    <select name="evaluation_grade" id="evaluation_grade" required>
-                        <option value="excellent">OTIMO</option>
-                        <option value="good">BOM</option>
-                        <option value="reasonable">RAZOÁVEL</option>
+                    <select name="evaluation_grade" id="evaluation_grade" v-model="evaluation.evaluation_grade"  required>
+                        <option value="OTIMO">OTIMO</option>
+                        <option value="BOM">BOM</option>
+                        <option value="RAZOÁVEL">RAZOÁVEL</option>
+                        <option value="RUIM">RUIM</option>
+                        <option value="MUITO RUIM">MUITO RUIM</option>
+
+
                     </select>
                 
                     <label for="menu_itens">Item do cardápio:</label>
-                    <select name="menu_items" id="menu_items" required>
-                        <option value="arroz">ARROZ</option>
-                        <option value="salada">SALADA</option>
-                        <option value="feijoada">FEIJOADA</option>
-                        <option value="carne">CARNE VERMELHA</option>
-                    </select>
+                    <select name="" id="" v-model="option_name" @click="getOptionID" >
+                              <option v-for="opt of options" v-bind:value="opt.option_name" :key="opt.id">{{opt.option_name}}</option>
+                          </select>
 
                     <label for="commentary">Comentário:</label>
-                    <select name="commentary" id="commentary" required>
-                        <option value="bom_tempero">BOM TEMPERO</option>
-                        <option value="muito_sal">MUITO SAL</option>
-                        <option value="sem_sal">SEM SAL</option>
+                    <select name="commentary" id="commentary" v-model="evaluation.commentary"  required>
+                        <option value="BOM TEMPERO">BOM TEMPERO</option>
+                        <option value="PONTO CERTO">PONTO CERTO</option>
+                        <option value="TEMPERO RUIM">TEMPERO RUIM</option>
+                        <option value="PASSOU DO PONTO">PASSOU DO PONTO</option>
+                        <option value="MAL CHEIRO">MAL CHEIRO</option>
+                        <option value="OUTRO">OUTRO</option>
+
+
                     </select>
 
                     <label for="valuation date">Data da avaliação:</label>
-                    <input type="date" name="valuation date" id="valuation date" required>
+                    <input type="date" name="valuation date" id="valuation date" v-model="evaluation.evaluation_date"  required>
                 </div>
                 <div class="button-div">
                     <!-- <button type="submit" class="rating-btn" onclick="">Finalizar cadastro de avaliação</button> -->
@@ -47,17 +53,58 @@
 
 <script>
 import PrimaryButton from '@/components/PrimaryButton.vue';
-
+import api from '@/services/api'
 export default {
   name: 'Rating',
+  data(){
+      return{
+          options: [],
+          option_name: null,
+          evaluation: {
+              menu_items_id: null,
+              evaluation_type: null,
+              evaluation_grade: null,
+              commentary: null,
+              evaluation_date: null,
+          }
+
+      }
+  },
   components:{
       PrimaryButton
   },
   methods: {
-      goToDashboard(){
-          this.$router.push('/dashboard')
-      }
-  }
+      goToDashboard(e){
+          e.preventDefault();
+        console.log(this.evaluation);
+        this.postEvaluation()
+      },
+      getOptionID(){
+          for(let opt of this.options){
+              if(opt.option_name === this.option_name){
+                  this.evaluation.option_id = opt.id;
+                    console.log(opt.option_id);
+                }
+            }
+      },
+    async getAllOptions(){
+        const res = await api.get('/option/');
+        console.log(res.data.Option);
+        this.options = res.data.Option;
+    },
+    async postEvaluation(){
+        try{
+            const res = await api.post('/evaluation/', this.evaluation);
+            console.log(res.data);
+              this.$router.push('/dashboard')
+        }catch(e){
+            alert(e.response.data.message)
+        }
+    }
+  },
+    mounted(){
+        this.getAllOptions()
+    }
 }
 </script>
 

@@ -7,6 +7,8 @@ import Rating from '@/views/Rating';
 import RegisterFood from '@/views/RegisterFood.vue';
 import ShowSelected from '@/views/MenuDetails.vue';
 import UpdateMenu from '@/views/UpdateMenu.vue';
+import AllRatings from '@/views/AllRatings.vue';
+
 
 const history = createWebHistory();
 const router = createRouter({
@@ -46,6 +48,11 @@ const router = createRouter({
       name: 'UpdateMenu',
       path: '/food/update-menu/:id',
       component: UpdateMenu
+    },
+    {
+      name: 'AllRatings',
+      path: '/all-ratings',
+      component: AllRatings
     }
   ]
 })

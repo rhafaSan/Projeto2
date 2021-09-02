@@ -3,7 +3,7 @@ import client from "../../../db_config";
 
 
 export async function Post(req, res) {
-  const { type_option, option_name, date_menu, option_id} = req.body;
+  const { type_option, option_name, date_menu, option_id, image_food} = req.body;
 
   const registerMenu =
     "INSERT INTO cardapio(type_option, option_name, date_menu, option_id, image_food)	VALUES ($1,$2,$3,$4,$5);";
@@ -13,7 +13,7 @@ export async function Post(req, res) {
     option_name,
     date_menu,
     option_id,
-    req.file.path
+    image_food
   ]);
   
   res.status(200).json({ message: "Cadastro efetuado com sucesso!" });

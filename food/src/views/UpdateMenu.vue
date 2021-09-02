@@ -85,7 +85,7 @@ export default {
             try{
                 const res = await api.put(`/menu/${this.id}`, data);
                 console.log(res.data);
-                // this.$router.push('/dashboard')
+                this.$router.push('/dashboard')
             }catch(e){
                 alert(e.response.data.message);
             }

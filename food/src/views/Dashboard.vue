@@ -9,6 +9,7 @@
                 <div class="bar-block">
                     <router-link to="/dashboard" class="link">Ínicio</router-link>
                     <router-link to="/rating" class="link">Avaliações</router-link>
+                    <router-link to="/all-ratings" class="link">Ver avaliações</router-link>
                     <div v-if="user_type === 'Nutricionista' ">
                         <router-link to="/register-food" class="link">Cadastrar</router-link>
                     </div>
@@ -62,6 +63,7 @@ export default {
           this.options = res.data.Menu;
       },
       goSelected(id){
+          console.log(id);
           this.$router.push(`/food/${id}`)
       }
   },
