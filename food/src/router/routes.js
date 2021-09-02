@@ -44,7 +44,7 @@ const router = createRouter({
     },
     {
       name: 'UpdateMenu',
-      path: '/update-menu',
+      path: '/food/update-menu/:id',
       component: UpdateMenu
     }
   ]

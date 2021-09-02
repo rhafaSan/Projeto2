@@ -2,7 +2,7 @@
      <main class="main-body">
         <div class="center-div">
                   <p> O que deseja atualizar no cardápio ? </p>
-                  <form action="" name="cardapio_form" @submit="finish" >
+                  <form  name="cardapio_form" @submit="finish" >
                       <div class="form-div">
                           <label for="tipOpcao">Atualizar o tipo de opção:</label>
                           <select name="" id="" v-model="type_option">
@@ -49,23 +49,23 @@ export default {
             date_menu: null,
             option_id: null,
             image_food: null,
-            options: []
+            options: [],
+            id: this.$route.params.id,
         }
     },
     methods: {
         finish(e){
             e.preventDefault();
-            this.register()
+            // console.log('ok')
+            this.updateMenu()
         },
         getOption(){
             for(let opt of this.options){
                 if(opt.option_name === this.option_name){
                     this.image_food = opt.image_food;
                     this.option_id = opt.id;
-                    console.log(opt);
                 }
             }
-            console.log(`${this.image_food} - ${this.option_id}`)
         },
 
         async getAllOptions(){
@@ -73,7 +73,7 @@ export default {
             console.log(res.data.Option);
             this.options = res.data.Option;
         },
-        async register(){
+        async updateMenu(){
             const data = {
                 type_option: this.type_option,
                 option_name: this.option_name,
@@ -82,10 +82,12 @@ export default {
                 image_food: this.image_food
 
             }
-            const res = await api.post('/menu/', data);
-            if(res.data.message === 'Atualização realizada com sucesso!'){
+            try{
+                const res = await api.put(`/menu/${this.id}`, data);
                 console.log(res.data);
-                this.$router.push('/dashboard')
+                // this.$router.push('/dashboard')
+            }catch(e){
+                alert(e.response.data.message);
             }
         }
 

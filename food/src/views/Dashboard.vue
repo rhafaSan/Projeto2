@@ -9,7 +9,9 @@
                 <div class="bar-block">
                     <router-link to="/dashboard" class="link">Ínicio</router-link>
                     <router-link to="/rating" class="link">Avaliações</router-link>
-                    <router-link to="/register-food" class="link">Cadastrar</router-link>
+                    <div v-if="user_type === 'Nutricionista' ">
+                        <router-link to="/register-food" class="link">Cadastrar</router-link>
+                    </div>
                 </div>
             </div>
             <div class="content">
@@ -49,7 +51,8 @@ export default {
   },
   data(){
       return{ 
-          options: []
+          options: [],
+          user_type: localStorage.getItem('user_type')
       }
   },
   methods:{
@@ -64,6 +67,7 @@ export default {
   },
   mounted(){
       this.getFoods();
+      console.log(this.user_type)
   }
 }
 </script>

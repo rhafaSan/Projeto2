@@ -12,7 +12,10 @@
                         <div class="container-card">
                             <h4><b>{{options.type_option}}</b></h4>
                             <p>{{options.option_name}}</p>
+                            <SecundaryButton @action="edit"  placeholder="Editar cardápio"/>
+                            <button @click="deleteFood">Deletar cardápio</button>
                         </div>
+
                     </div>
                     <div class="text">
                         <div class="container-card">
@@ -33,13 +36,16 @@
 </template>
 <script>
 import api from '@/services/api.js';
+import SecundaryButton from '@/components/SecundaryButton';
 export default{
     name: 'ShowSelected',
+    components: {
+        SecundaryButton
+    },
     data(){
         return{
             id: this.$route.params.id,
-            options: []
-            
+            options: []   
         }
     },
     methods: {
@@ -47,6 +53,18 @@ export default{
             const res = await api.get(`/option/${this.id}`);
             console.log(res.data.Option[0].option_name);
             this.options = res.data.Option[0];
+        },
+        edit(){
+            this.$router.push(`update-menu/${this.id}`)
+        },
+        async deleteFood() {
+            try{
+                const res = await api.delete(`/option/${this.id}`);
+                console.log(res.data);
+            }catch(e){
+                alert(e.response.data.message)
+            }
+
         }
     },
     mounted(){

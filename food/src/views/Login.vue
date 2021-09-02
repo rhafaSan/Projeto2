@@ -79,6 +79,7 @@ export default {
         }
         try{
             const res = await api.post('/login',data);
+            localStorage.setItem('user_type', this.TypeUser);
             console.log(res.data);
             this.$router.push('/dashboard');
         }catch(err){
